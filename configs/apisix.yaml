@@ -4,16 +4,20 @@ apisix:
 
   enable_control: true
   control:
-    ip: "${{APISIX_CONTROL_IP:=0.0.0.0}}"
+    # ip: ${{APISIX_CONTROL_IP:=127.0.0.1}}
+    ip: 0.0.0.0
     port: ${{APISIX_CONTROL_PORT:=9090}}
 
 deployment:
   admin:
     allow_admin: # https://nginx.org/en/docs/http/ngx_http_access_module.html#allow
       - 0.0.0.0/0 # We need to restrict ip access rules for security. 0.0.0.0/0 is for test.
+      # - 127.0.0.1/32
 
     admin_listen:
-      port: ${{DEPLOYMENT_ADMIN_ADMIN_LISTEN:=9180}}
+      # ip: ${{DEPLOYMENT_ADMIN_ADMIN_LISTEN_IP:=127.0.0.1}}
+      ip: 0.0.0.0
+      port: ${{DEPLOYMENT_ADMIN_ADMIN_LISTEN_PORT:=9180}}
 
     admin_key:
       - name: "admin"
@@ -27,7 +31,7 @@ deployment:
   etcd:
     host: # it's possible to define multiple etcd hosts addresses of the same etcd cluster.
       - "http://etcd:2379" # multiple etcd address
-    # user: ${{ETCD_ROOT_USER:=root}} # username for etcd
-    # password: ${{ETCD_ROOT_PASS:=etcd_password}} # password for etcd
+    user: root
+    password: "${{ETCD_ROOT_PASSWORD:=etcd_password}}"
     prefix: "/apisix" # apisix configurations prefix
     timeout: 30 # 30 seconds

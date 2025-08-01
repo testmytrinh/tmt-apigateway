@@ -17,18 +17,18 @@ services:
     depends_on:
       - etcd
     environment:
-      APISIX_NODE_LISTEN: ${APISIX_NODE_LISTEN}
-      APISIX_CONTROL_IP: ${APISIX_CONTROL_IP}
-      APISIX_CONTROL_PORT: ${APISIX_CONTROL_PORT}
-      DEPLOYMENT_ADMIN_ADMIN_LISTEN: ${DEPLOYMENT_ADMIN_ADMIN_LISTEN}
-      DEPLOYMENT_ADMIN_ADMIN_KEY: ${DEPLOYMENT_ADMIN_ADMIN_KEY}
-      DEPLOYMENT_ADMIN_VIEWER_KEY: ${DEPLOYMENT_ADMIN_VIEWER_KEY}
+      APISIX_NODE_LISTEN: ${APISIX_NODE_LISTEN:?error}
+      APISIX_CONTROL_PORT: ${APISIX_CONTROL_PORT:?error}
+      DEPLOYMENT_ADMIN_ADMIN_LISTEN_PORT: ${DEPLOYMENT_ADMIN_ADMIN_LISTEN_PORT:?error}
+      DEPLOYMENT_ADMIN_ADMIN_KEY: ${DEPLOYMENT_ADMIN_ADMIN_KEY:?error}
+      DEPLOYMENT_ADMIN_VIEWER_KEY: ${DEPLOYMENT_ADMIN_VIEWER_KEY:?error}
+      ETCD_ROOT_PASSWORD: ${ETCD_ROOT_PASSWORD:?error}
     ports:
-      - "9080:9080/tcp" # Listen for user requests (HTTP)
+      - "9080:${APISIX_NODE_LISTEN}/tcp" # Listen for user requests (HTTP)
       - "9443:9443/tcp" # Listen for user requests with SSL enabled. (HTTPS)
-      # - "9091:9091/tcp" # Set the port where APISIX exports metrics for Prometheus.
-      - "9090:9090/tcp" # Listen for requests to Control API.
-      - "9180:9180/tcp" # Listen for requests to Admin API. ( HTTP(S) )
+      # - "9091:9091/tcp" # APISIX exports metrics for Prometheus.
+      - "127.0.0.1:9090:${APISIX_CONTROL_PORT}/tcp" # Listen for requests to Control API.
+      - "127.0.0.1:9180:${DEPLOYMENT_ADMIN_ADMIN_LISTEN_PORT}/tcp" # Listen for requests to Admin API. ( HTTP(S) )
     networks:
       lms:
 
@@ -36,13 +36,9 @@ services:
     image: apache/apisix-dashboard:3.0.1-alpine
     container_name: apisix-dashboard
     ports:
-      - "9000:9000" # access via http://localhost:9000
+      - "9000:9000"
     volumes:
       - ./configs/apisix_dashboard.yaml:/usr/local/apisix-dashboard/conf/conf.yaml
-    environment:
-      APISIX_DASHBOARD_SECRET: ${APISIX_DASHBOARD_SECRET}
-      APISIX_DASHBOARD_USER: ${APISIX_DASHBOARD_USER}
-      APISIX_DASHBOARD_PASS: ${APISIX_DASHBOARD_PASS}
     depends_on:
       - etcd
     networks:
@@ -50,16 +46,17 @@ services:
 
   etcd:
     image: bitnami/etcd:3.6
-    restart: always
+    # restart: always
     volumes:
       - etcd_data:/bitnami/etcd
     environment:
       ETCD_ENABLE_V2: "true"
-      ALLOW_NONE_AUTHENTICATION: "yes"
-      ETCD_CONFIG_FILE: ""
+      ALLOW_NONE_AUTHENTICATION: "no"
+      ETCD_ROOT_PASSWORD: ${ETCD_ROOT_PASSWORD:?error}
+      # ETCD_CONFIG_FILE: ""
       ETCD_ADVERTISE_CLIENT_URLS: "http://etcd:2379"
       ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
-    ports:
-      - "2379:2379/tcp"
+    # ports:
+    #   - "2379:2379/tcp"
     networks:
       lms:
