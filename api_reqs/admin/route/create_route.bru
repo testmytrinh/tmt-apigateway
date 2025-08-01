@@ -1,0 +1,23 @@
+meta {
+  name: create_route
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://{{ADMIN_DEV_HOST}}/apisix/admin/routes
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "methods": ["GET"],
+    "uri": "/*",
+    "upstream_id": "00000000000000000185"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

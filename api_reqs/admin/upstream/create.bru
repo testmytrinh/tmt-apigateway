@@ -1,0 +1,25 @@
+meta {
+  name: create
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://{{ADMIN_DEV_HOST}}/apisix/admin/upstreams/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "type": "roundrobin",
+    "nodes": {
+      "web1:80": 1,
+      "web2:80":1
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+}

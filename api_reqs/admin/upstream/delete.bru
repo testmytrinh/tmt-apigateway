@@ -1,0 +1,19 @@
+meta {
+  name: delete
+  type: http
+  seq: 3
+}
+
+delete {
+  url: http://{{ADMIN_DEV_HOST}}/apisix/admin/upstreams/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 00000000000000000185
+}
+
+settings {
+  encodeUrl: true
+}

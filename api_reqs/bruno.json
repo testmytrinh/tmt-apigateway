@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "apisix",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

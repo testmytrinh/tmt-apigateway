@@ -1,0 +1,19 @@
+meta {
+  name: get_route
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://{{ADMIN_DEV_HOST}}/apisix/admin/routes/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 1
+}
+
+settings {
+  encodeUrl: true
+}

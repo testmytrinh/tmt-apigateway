@@ -1,0 +1,19 @@
+meta {
+  name: edit_route
+  type: http
+  seq: 1
+}
+
+patch {
+  url: http://{{ADMIN_DEV_HOST}}/apisix/admin/routes/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: 00000000000000000187
+}
+
+settings {
+  encodeUrl: true
+}
