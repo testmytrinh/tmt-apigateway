@@ -32,17 +32,17 @@ services:
     networks:
       lms:
 
-  dashboard:
-    image: apache/apisix-dashboard:3.0.1-alpine
-    container_name: apisix-dashboard
-    ports:
-      - "9000:9000"
-    volumes:
-      - ./configs/apisix_dashboard.yaml:/usr/local/apisix-dashboard/conf/conf.yaml
-    depends_on:
-      - etcd
-    networks:
-      lms:
+  # dashboard:
+  #   image: apache/apisix-dashboard:3.0.1-alpine
+  #   container_name: apisix-dashboard
+  #   ports:
+  #     - "9000:9000"
+  #   volumes:
+  #     - ./configs/apisix_dashboard.yaml:/usr/local/apisix-dashboard/conf/conf.yaml
+  #   depends_on:
+  #     - etcd
+  #   networks:
+  #     lms:
 
   etcd:
     image: bitnami/etcd:3.6
