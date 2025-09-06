@@ -1,0 +1,4 @@
+lms.anhnuive.id.vn {
+    reverse_proxy host.docker.internal:5173
+}
+
